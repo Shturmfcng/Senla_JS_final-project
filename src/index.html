@@ -10,11 +10,38 @@
 
 <body>
   <header>
-
+    <a class="btn btn--return_homepage" href="#" role="button" aria-label="Return homepage" title="Return homepage">
+      <img src="images/content/home.png" alt="little blue house">
+    </a>
+    <a class="btn btn--sign_in_up" href="#" role="button" aria-label="Sign In / Sign Up">
+      Sign In / Sign Up
+    </a>
   </header>
 
   <main>
-
+    <section class="gallery">
+      <div class="gallery__wrapper">
+        <h1 hidden>Film gallery</h1>
+        <select tabindex="0">
+          <option value="none">none</option>
+          <option value="vote_rating_down">↓ rating</option>
+          <option value="vote_rating_up">↑ rating</option>
+          <option value="release_date_down">↓ date</option>
+          <option value="release_date_up">↑ date</option>
+        </select>
+        <ul class="gallery__container">
+        </ul>
+        <ul class="gallery__pagination">
+          <li><a href="#">&laquo;</a></li>
+          <li><a class="active" href="#">1</a></li>
+          <li><a href="#">2</a></li>
+          <li><a href="#">3</a></li>
+          <li><a href="#">4</a></li>
+          <li><a href="#">5</a></li>
+          <li><a href="#">&raquo;</a></li>
+        </ul>
+      </div>
+    </section>
   </main>
 </body>
 

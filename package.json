@@ -2,7 +2,7 @@
   "author": "Mikhail Gotsko <Shturmfcng@gmail.com>",
   "name": "senla_js_final-project",
   "version": "1.0.0",
-  "description": "",
+  "description": "![Maintenance](https://img.shields.io/maintenance/yes/2021?logo=github) ![webpack-current](https://img.shields.io/badge/webpack-v5.32.0-green?logo=webpack) ![node-current (scoped)](https://img.shields.io/node/v/@weareathlon/frontend-webpack-boilerplate) [![Build Status](https://api.travis-ci.org/weareathlon/frontend-webpack-boilerplate.svg?branch=master)](https://travis-ci.org/weareathlon/frontend-webpack-boilerplate) [![@weareathlon/frontend-webpack-boilerplate](https://snyk.io/advisor/npm-package/@weareathlon/frontend-webpack-boilerplate/badge.svg)](https://snyk.io/advisor/npm-package/@weareathlon/frontend-webpack-boilerplate) [![GitHub Issues](https://img.shields.io/github/issues-raw/WeAreAthlon/frontend-webpack-boilerplate)](https://github.com/WeAreAthlon/frontend-webpack-boilerplate/issues) [![Known Vulnerabilities](https://snyk.io/test/github/WeAreAthlon/frontend-webpack-boilerplate/badge.svg?targetFile=package.json)](https://snyk.io/test/github/WeAreAthlon/frontend-webpack-boilerplate?targetFile=package.json) [![devDependency Status](https://david-dm.org/WeAreAthlon/frontend-webpack-boilerplate/dev-status.svg)](https://david-dm.org/WeAreAthlon/frontend-webpack-boilerplate?type=dev) [![npm](https://img.shields.io/npm/dm/@weareathlon/frontend-webpack-boilerplate)](https://www.npmjs.com/package/@weareathlon/frontend-webpack-boilerplate) [![GitHub License](https://img.shields.io/github/license/WeAreAthlon/frontend-webpack-boilerplate)](https://github.com/WeAreAthlon/frontend-webpack-boilerplate/blob/master/LICENSE)",
   "homepage": "https://github.com/Shturmfcng/Senla_JS_final-project#readme",
   "browserslist": [
     "last 2 versions",
@@ -61,7 +61,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/Shturmfcng/Senla_JS_final-project.git"
+    "url": "git+https://github.com/Shturmfcng/Senla_JS_final-project.git"
   },
   "scripts": {
     "build": "webpack --config configuration/webpack.dev.config.js --mode=development",
@@ -74,5 +74,11 @@
     "lint:js": "eslint --ext .js src/js/",
     "stats": "webpack --config configuration/webpack.prod.config.js --mode=production --json > dist/stats.json && webpack-bundle-analyzer dist/stats.json"
   },
-  "target": "web"
+  "target": "web",
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "node-sass": "^5.0.0",
+    "typescript": "^4.2.4"
+  },
+  "main": "postcss.config.js"
 }
