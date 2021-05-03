@@ -200,3 +200,35 @@ header {
     }
   }
 }
+
+@media screen and (max-width: 500px) {
+  .gallery__container {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-row-gap: 24px;
+    grid-column-gap: 24px;
+  }
+
+  .gallery__item {
+    width: 160px;
+    height: 240px;
+
+    img {
+      width: 160px;
+      height: 240px;
+    }
+  }
+
+  .gallery__pagination {
+    .pagination-list {
+      .page,
+      .switch-page {
+        width: 28px;
+        height: 28px;
+        margin: 0 3px;
+        border-radius: 3px;
+        font-size: 14px;
+        line-height: 26px;
+      }
+    }
+  }
+}
