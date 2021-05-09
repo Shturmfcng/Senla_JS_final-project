@@ -5,18 +5,15 @@ import '../scss/app.scss';
 const fetch = require('node-fetch');
 
 document.addEventListener('DOMContentLoaded', function () {
+  const header = document.querySelector('.header');
   const pagination = document.querySelector('.gallery__pagination');
-
   const sort = document.querySelector('.gallery__sort > select');
-
   const content = document.getElementById('content');
+  const gallery = document.querySelector('.gallery');
 
   let numberPage = '1';
-
   let sortBy = 'popularity.desc';
-
   const language = 'en-US';
-
   let url;
 
   goToPage();
@@ -25,6 +22,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const activePage = document.getElementById('activePage');
     numberPage = activePage.textContent;
     getFilms();
+  }
+
+  function returnHomepage(e) {
+    const homepage = e.target.closest('.btn--return_homepage');
+    const film = document.querySelector('.film');
+
+    if (homepage) {
+      gallery.removeAttribute('hidden');
+      getFilms();
+      if (film) {
+        film.remove();
+      }
+    }
   }
 
   function switchPage(e) {
@@ -94,21 +104,29 @@ document.addEventListener('DOMContentLoaded', function () {
         let galleryContent = '';
         const galleryContainer = document.querySelector('.gallery__container');
 
-        films.results.forEach((film) => {
+        films.results.forEach((f) => {
+          const releaseDate = f.release_date || 'No Information';
+          let poster;
+          if (f.poster_path) {
+            poster = `https://image.tmdb.org/t/p/w200${f.poster_path}`;
+          } else {
+            poster = '../images/content/no_image_available.svg';
+          }
+
           galleryContent += `
       <li class="gallery__item">
-        <a class='item' href="#" id="${film.id}"><img src='https://image.tmdb.org/t/p/w200${film.poster_path}' alt='${film.title}'>
+        <a class='item' href="#" id="${f.id}"><img src='${poster}' alt='${f.title}'>
           <div class='tooltip'>
-            <h2>${film.title}</h2>
-            <p>${film.vote_average}</p>
-            <p>${film.release_date}</p>
+            <h2>${f.title}</h2>
+            <p>${f.vote_average}</p>
+            <p>${releaseDate}</p>
           </div>
         </a>
         <button class="bin" type="button"></button>
       </li>
       `;
         });
-        console.log(films);
+
         galleryContainer.innerHTML = galleryContent;
       });
     visiblePagination();
@@ -118,7 +136,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const item = e.target.closest('.item');
 
     if (item) {
+      gallery.setAttribute('hidden', '');
       const filmId = item.getAttribute('id');
+
       url = `https://api.themoviedb.org/3/movie/${filmId}?api_key=ec929a3499d8d5db225c5dbcaa0e1607&language=${language}`;
 
       const fetchFilm = fetch(url);
@@ -126,32 +146,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
       fetchFilm
         .then((response) => response.json())
-        .then((film) => {
-          film.genres.forEach((genre) => {
+        .then((f) => {
+          f.genres.forEach((genre) => {
             genres += genre.name + ', ';
             return genres;
           });
-          genres = genres.slice(0, -2);
+          genres = genres.slice(0, -2) || 'No Information';
+
+          const releaseDate = f.release_date || 'No Information';
+          let backdrop;
+          if (f.backdrop_path) {
+            backdrop = `https://image.tmdb.org/t/p/w500${f.backdrop_path}`;
+          } else {
+            backdrop = '../images/content/no_image_available.svg';
+          }
 
           const filmContent = `
             <section class="film">
-              <h1 class="film__title">${film.title}</h1>
+              <h1 class="film__title">${f.title}</h1>
               <div class="film__image-wrapper">
-                <img class="film__image" src='https://image.tmdb.org/t/p/w500${film.backdrop_path}' alt='${film.title}'>
+                <img class="film__image" src='${backdrop}' alt='${f.title}'>
                 <div class="film__statistics">
-                  <p title="Release Date">${film.release_date}</p>
-                  <p title="Rating">${film.vote_average}</p>
-                  <p title="Popularity">${film.popularity}</p>
-                  <p title="Total Votes">${film.vote_count}</p>
+                  <p title="Release Date">${releaseDate}</p>
+                  <p title="Rating">${f.vote_average}</p>
+                  <p title="Popularity">${f.popularity}</p>
+                  <p title="Total Votes">${f.vote_count}</p>
                 </div>
               </div>
               <div class="film__info">
                 <p><span>Genres:</span> ${genres}</p>
-                <p>${film.overview}</p>
+                <p>${f.overview}</p>
               </div>
             </section>
             `;
-          content.innerHTML = filmContent;
+          content.insertAdjacentHTML('beforeend', filmContent);
         });
     }
   }
@@ -177,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
     getFilms();
   }
 
+  header.addEventListener('click', returnHomepage);
   content.addEventListener('click', getFilm);
   sort.addEventListener('change', sortFilms);
   pagination.addEventListener('click', switchPage);
