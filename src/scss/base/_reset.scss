@@ -108,7 +108,7 @@ header,
 hgroup,
 main,
 nav,
-section,
+// section,
 summary,
 main {
   display: block;
@@ -144,7 +144,7 @@ input {
 }
 
 // 1. Addresses appearance set to searchfield in Safari 5, Chrome
-input[type="search"] {
+input[type='search'] {
   -webkit-appearance: textfield; // 1
 }
 
