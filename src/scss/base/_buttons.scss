@@ -94,3 +94,37 @@
     }
   }
 }
+
+.bin,
+.pencil {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background-color: $white;
+  background-size: 100%;
+  border: none;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.bin {
+  background-image: url(../images/content/bin-1.png);
+
+  &:hover {
+    background-image: url(../images/content/bin-2.png);
+  }
+}
+
+.pencil {
+  background-image: url(../images/content/pencil-1.svg);
+
+  &:hover {
+    background-image: url(../images/content/pencil-2.svg);
+  }
+}

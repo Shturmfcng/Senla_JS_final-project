@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <p>${releaseDate}</p>
           </div>
         </a>
-        <button class="bin" type="button"></button>
+        <button class="bin" type="button" tabindex="-1"></button>
       </li>
       `;
         });
@@ -166,11 +166,17 @@ document.addEventListener('DOMContentLoaded', function () {
               <h1 class="film__title">${f.title}</h1>
               <div class="film__image-wrapper">
                 <img class="film__image" src='${backdrop}' alt='${f.title}'>
-                <div class="film__statistics">
-                  <p title="Release Date">${releaseDate}</p>
-                  <p title="Rating">${f.vote_average}</p>
-                  <p title="Popularity">${f.popularity}</p>
-                  <p title="Total Votes">${f.vote_count}</p>
+                <div>
+                  <div class="film__admin">
+                    <button class="pencil" type="button" tabindex="-1"></button>
+                    <button class="bin" type="button" tabindex="-1"></button>
+                  </div>
+                  <div class="film__statistics">
+                    <p title="Release Date">${releaseDate}</p>
+                    <p title="Rating">${f.vote_average}</p>
+                    <p title="Popularity">${f.popularity}</p>
+                    <p title="Total Votes">${f.vote_count}</p>
+                  </div>
                 </div>
               </div>
               <div class="film__info">
