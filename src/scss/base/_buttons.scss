@@ -1,97 +1,143 @@
 .btn {
-  display: inline-block;
   position: relative;
+  width: 160px;
+  height: 36px;
+  padding: 10px 16px;
+  text-align: center;
+  letter-spacing: 0.75px;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
   overflow: hidden;
-  border: none;
-  outline: none;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.4);
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.75);
+  }
 
   &:active {
     transform: translateY(1px);
   }
 
-  &--return_homepage {
-    &:after {
-      content: '';
-      position: absolute;
-      height: 200%;
-      width: 200%;
-      top: -30%;
-      left: -225%;
-      opacity: 0;
-      transform: rotate(60deg);
-      background: rgba(255, 255, 255, 0.13);
-      background: linear-gradient(
-        to top,
-        rgba(255, 255, 255, 0.13) 0%,
-        rgba(255, 255, 255, 0.13) 65%,
-        rgba(255, 255, 255, 0.5) 80%,
-        rgba(255, 255, 255, 0) 100%
-      );
-    }
-
-    &:hover:after,
-    &:focus-visible:after {
-      left: 0;
-      opacity: 1;
-      transition-duration: 0.75s, 0.15s;
-      transition-property: left, opacity;
-      transition-timing-function: ease;
-    }
-
-    &:active:after {
-      opacity: 0;
-    }
+  &:after {
+    content: '';
+    height: 800%;
+    width: 120%;
+    top: -330%;
+    left: -165%;
+    opacity: 0;
+    position: absolute;
+    transform: rotate(65deg);
+    background: rgba(255, 255, 255, 0.13);
+    background: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 0.13) 0%,
+      rgba(255, 255, 255, 0.13) 65%,
+      rgba(255, 255, 255, 0.5) 80%,
+      rgba(255, 255, 255, 0) 100%
+    );
   }
 
-  &--sign_in_up {
-    width: 191px;
-    height: 36px;
-    padding: 10px 16px;
-    text-align: center;
-    letter-spacing: 0.75px;
-    text-transform: uppercase;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 16px;
+  &:hover:after,
+  &:focus-visible:after {
+    left: 30%;
+    opacity: 1;
+    transition-duration: 0.75s, 0.15s;
+    transition-property: left, opacity;
+    transition-timing-function: ease;
+  }
+
+  &:active:after {
+    opacity: 0;
+  }
+
+  &--primary {
     color: $white;
     background-color: #0071bb;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.4);
+  }
 
-    &:focus-visible {
-      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.75);
-    }
+  &--secondary {
+    color: $black;
+    background-color: #efefef;
+  }
 
-    &:after {
-      content: '';
-      height: 800%;
-      width: 120%;
-      top: -330%;
-      left: -155%;
-      opacity: 0;
-      position: absolute;
-      transform: rotate(60deg);
-      background: rgba(255, 255, 255, 0.13);
-      background: linear-gradient(
-        to top,
-        rgba(255, 255, 255, 0.13) 0%,
-        rgba(255, 255, 255, 0.13) 65%,
-        rgba(255, 255, 255, 0.5) 80%,
-        rgba(255, 255, 255, 0) 100%
-      );
-    }
+  &:disabled {
+    background-color: #d6d6d6;
+    color: rgba(107, 107, 107, 0.75);
+    pointer-events: none;
+  }
+}
 
-    &:hover:after,
-    &:focus-visible:after {
-      left: 20%;
-      opacity: 1;
-      transition-duration: 0.75s, 0.15s;
-      transition-property: left, opacity;
-      transition-timing-function: ease;
-    }
+.btn-return_homepage,
+.btn-add_film {
+  position: relative;
+  overflow: hidden;
 
-    &:active:after {
-      opacity: 0;
-    }
+  &:focus {
+    outline: none;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    height: 200%;
+    width: 200%;
+    top: -30%;
+    left: -225%;
+    opacity: 0;
+    transform: rotate(65deg);
+    background: rgba(255, 255, 255, 0.13);
+    background: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 0.13) 0%,
+      rgba(255, 255, 255, 0.13) 65%,
+      rgba(255, 255, 255, 0.5) 80%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+
+  &:hover:after,
+  &:focus-visible:after {
+    left: 0;
+    opacity: 1;
+    transition-duration: 0.75s, 0.15s;
+    transition-property: left, opacity;
+    transition-timing-function: ease;
+  }
+
+  &:active:after {
+    opacity: 0;
+  }
+}
+
+.btn-return_homepage {
+  img {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.btn-add_film {
+  border-radius: 7px;
+  top: -1px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.4);
+
+  img {
+    width: 32px;
+    height: 32px;
+  }
+
+  &:focus-visible {
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.75);
   }
 }
 
@@ -122,6 +168,7 @@
 }
 
 .pencil {
+  margin-right: 5px;
   background-image: url(../images/content/pencil-1.svg);
 
   &:hover {

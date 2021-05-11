@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 import '../scss/app.scss';
 
 /* eslint-disable no-console */
@@ -24,16 +25,192 @@ document.addEventListener('DOMContentLoaded', function () {
     getFilms();
   }
 
-  function returnHomepage(e) {
-    const homepage = e.target.closest('.btn--return_homepage');
+  function applicationControl(e) {
+    const btnHomepage = e.target.closest('.btn-return_homepage');
+    const btnSignInUp = e.target.closest('.btn--primary');
     const film = document.querySelector('.film');
+    const signInUp = document.querySelector('.sign_in_up');
+    const registration = document.querySelector('.registration');
 
-    if (homepage) {
+    if (btnHomepage) {
       gallery.removeAttribute('hidden');
       getFilms();
       if (film) {
         film.remove();
+      } else if (signInUp) {
+        signInUp.remove();
+      } else if (registration) {
+        registration.remove();
       }
+    } else if (btnSignInUp) {
+      if (!signInUp) {
+        gallery.setAttribute('hidden', '');
+        if (film) {
+          film.remove();
+        } else if (registration) {
+          registration.remove();
+        }
+        goToSignInUp();
+      }
+    }
+  }
+
+  function goToSignInUp() {
+    const pageContent = `
+      <section class="sign_in_up">
+        <div class="sign_in_up__content">
+          <h1 class="sign_in_up__content__title">Sign In</h1>
+          <form id="signInForm" class="sign_in_up__content__form">
+            <div class="form--email">
+              <input type="email" id="email" name="email" placeholder="Email" required />
+              <label for="email">Email</label>
+              <p class="requirements">The email address must contain the "@" symbol.</p>
+            </div>
+            <div class="form--password">
+              <input type="password" id="password" name="password" minlength="6"
+              placeholder="Password" required />
+              <label for="password">Password</label>
+              <p class="requirements">The password must be at least 6 characters long.</p>
+            </div>
+          </form>
+          <div class="sign_in_up__content__buttons">
+            <button form="signInForm" id="btnSignIn" class="btn btn--primary" aria-label="Sign In" disabled>Sign In</button>
+            <a id="btnRegistration" class="btn btn--primary" href="#" role="button" aria-label="Registration">Registration</a>
+          </div>
+        </div>
+      </section>
+    `;
+    content.insertAdjacentHTML('beforeend', pageContent);
+
+    const signInUp = document.querySelector('.sign_in_up');
+    signInUp.addEventListener('input', checkValidity);
+    signInUp.addEventListener('click', goToSignIn);
+    signInUp.addEventListener('click', goToRegistration);
+  }
+
+  function goToSignIn(e) {
+    const btnSignIn = e.target.closest('#btnSignIn');
+    const signInUp = document.querySelector('.sign_in_up');
+
+    if (btnSignIn && !btnSignIn.hasAttribute('disabled')) {
+      signInUp.remove();
+      gallery.removeAttribute('hidden');
+      getFilms();
+    }
+  }
+
+  function goToRegistration(e) {
+    const btnRegistration = e.target.closest('#btnRegistration');
+    const signInUp = document.querySelector('.sign_in_up');
+
+    if (btnRegistration) {
+      signInUp.remove();
+      const pageContent = `
+      <section class="registration">
+        <div class="registration__content">
+          <h1 class="registration__content__title">Registration</h1>
+          <form id="registrationForm" class="registration__content__form">
+            <div class="form--name">
+              <input type="text" id="userName" name="userName" minlength="6" placeholder="Name" required />
+              <label for="userName">Name</label>
+              <p class="requirements">The name must be at least 6 characters long.</p>
+            </div>
+            <div class="form--surname">
+              <input type="text" id="userSurname" name="userSurname" minlength="6" placeholder="Surname" required />
+              <label for="userSurname">Surname</label>
+              <p class="requirements">The surname must be at least 6 characters long.</p>
+            </div>
+            <div class="form--password">
+              <input type="password" id="password" name="password" minlength="6"
+              placeholder="Password" required />
+              <label for="password">Password</label>
+              <p class="requirements">The password must be at least 6 characters long.</p>
+            </div>
+            <div class="form--confirm-password">
+              <input type="password" id="confirmPassword" name="confirm-password" minlength="6"
+              placeholder="Confirm Password" required />
+              <label for="confirmPassword">Confirm Password</label>
+              <p class="requirements">You entered two different passwords. Please try again.</p>
+            </div>
+            <div class="form--email">
+              <input type="email" id="email" name="email" placeholder="Email" required />
+              <label for="email">Email</label>
+              <p class="requirements">The email address must contain the "@" symbol.</p>
+            </div>
+          </form>
+          <div class="registration__content__buttons">
+            <button form="registrationForm" id="btnSignUp" class="btn btn--primary" aria-label="Sign Up" disabled>
+            Sign Up</button>
+            <button form="registrationForm" id="btnClear" class="btn btn--secondary" type="reset" aria-label="Clear">
+            Clear</button>
+          </div>
+        </div>
+      </section>
+      `;
+      content.insertAdjacentHTML('beforeend', pageContent);
+
+      const registration = document.querySelector('.registration');
+      registration.addEventListener('input', checkValidity);
+      const registrationForm = document.querySelector('.registration');
+      registrationForm.addEventListener('input', checkPasswordsMatch);
+      registrationForm.addEventListener('click', clearForm);
+    }
+  }
+
+  function checkValidity() {
+    const btnSignIn = document.getElementById('btnSignIn');
+    const btnSignUp = document.getElementById('btnSignUp');
+    const name = document.getElementById('userName');
+    const surname = document.getElementById('userSurname');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+
+    if (btnSignIn) {
+      if (email.checkValidity() && password.checkValidity()) {
+        btnSignIn.removeAttribute('disabled');
+      } else {
+        btnSignIn.setAttribute('disabled', '');
+      }
+    } else if (btnSignUp) {
+      if (
+        name.checkValidity() &&
+        surname.checkValidity() &&
+        password.checkValidity() &&
+        email.checkValidity() &&
+        password.value === confirmPassword.value
+      ) {
+        btnSignUp.removeAttribute('disabled');
+      } else {
+        btnSignUp.setAttribute('disabled', '');
+      }
+    }
+  }
+
+  function checkPasswordsMatch() {
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+
+    if (confirmPassword.value === password.value && confirmPassword.value !== '') {
+      confirmPassword.classList.remove('invalid');
+      confirmPassword.classList.add('valid');
+    } else if (confirmPassword.value !== '') {
+      confirmPassword.classList.remove('valid');
+      confirmPassword.classList.add('invalid');
+    } else {
+      confirmPassword.classList.remove('valid');
+      confirmPassword.classList.remove('invalid');
+    }
+  }
+
+  function clearForm(e) {
+    const btnSignUp = document.getElementById('btnSignUp');
+    const confirmPassword = document.getElementById('confirmPassword');
+
+    if (e.target.closest('#btnClear')) {
+      btnSignUp.setAttribute('disabled', '');
+      confirmPassword.classList.remove('valid');
+      confirmPassword.classList.remove('invalid');
     }
   }
 
@@ -115,14 +292,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
           galleryContent += `
       <li class="gallery__item">
-        <a class='item' href="#" id="${f.id}"><img src='${poster}' alt='${f.title}'>
+        <a class="item" href="#" id="${f.id}"><img src="${poster}" alt="${f.title}">
           <div class='tooltip'>
             <h2>${f.title}</h2>
             <p>${f.vote_average}</p>
             <p>${releaseDate}</p>
           </div>
         </a>
-        <button class="bin" type="button" tabindex="-1"></button>
+        <div class="item--admin">
+          <button class="bin" type="button" tabindex="-1"></button>
+        </div>
       </li>
       `;
         });
@@ -211,7 +390,7 @@ document.addEventListener('DOMContentLoaded', function () {
     getFilms();
   }
 
-  header.addEventListener('click', returnHomepage);
+  header.addEventListener('click', applicationControl);
   content.addEventListener('click', getFilm);
   sort.addEventListener('change', sortFilms);
   pagination.addEventListener('click', switchPage);

@@ -31,9 +31,14 @@ body {
   }
 
   &__sort {
+    display: flex;
+    align-items: flex-start;
+
     select {
-      margin: 0 auto 30px;
+      margin-bottom: 30px;
+      margin-right: 10px;
       padding: 5px 30px 5px 10px;
+      width: 130px;
       height: 30px;
       font-size: 14px;
       background: $white;
@@ -206,7 +211,7 @@ body {
 
   &__title {
     padding: 16px 0;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     color: $black;
   }
@@ -288,6 +293,163 @@ body {
 
     p:nth-child(2) {
       text-indent: 32px;
+    }
+  }
+}
+
+.sign_in_up,
+.registration {
+  display: flex;
+  justify-content: center;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+
+    &__title {
+      margin: 16px 0 24px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: $black;
+    }
+
+    &__form {
+      .form--name,
+      .form--surname,
+      .form--password,
+      .form--confirm-password,
+      .form--email {
+        position: relative;
+
+        input {
+          display: block;
+          padding: 10px 16px;
+          margin-bottom: 32px;
+          width: 100%;
+          height: 40px;
+          background: $white;
+          border: 1px solid #d6d6d6;
+          border-radius: 5px;
+          line-height: 20px;
+
+          &:hover {
+            border: 1px solid #0071bb;
+          }
+
+          &:focus-visible {
+            border: 1px solid #0071bb;
+            box-shadow: 0 0 0 2px rgba(0, 113, 187, 0.25);
+          }
+
+          &::placeholder {
+            color: rgba(107, 107, 107, 0.75);
+          }
+
+          &:hover::placeholder {
+            color: rgba(107, 107, 107, 1);
+          }
+
+          &:focus:not(:placeholder-shown) {
+            color: $black;
+          }
+
+          &:focus + label,
+          &:focus:not(:placeholder-shown) + label {
+            display: block;
+            color: #0071bb;
+          }
+
+          &:not(:placeholder-shown) + label {
+            display: block;
+            color: $text-color;
+          }
+        }
+
+        .requirements {
+          position: absolute;
+          top: 40px;
+          height: 0;
+          padding: 0 16px;
+          transition: 0.3s;
+          overflow: hidden;
+          color: red;
+          font-size: 12px;
+        }
+
+        .valid {
+          border: 1px solid green !important;
+          box-shadow: 0 0 0 2px rgba(0, 128, 0, 0.25), inset 0 0 0 50px $white !important;
+
+          & + label {
+            color: green !important;
+          }
+        }
+
+        .invalid {
+          border: 1px solid red !important;
+          box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.25), inset 0 0 0 50px $white !important;
+
+          & + label {
+            color: red !important;
+          }
+
+          & ~ .requirements {
+            height: 20px;
+            padding: 4px 16px;
+          }
+        }
+
+        label {
+          position: absolute;
+          display: none;
+          background: $white;
+          font-size: 12px;
+          line-height: 24px;
+          left: 12px;
+          bottom: 28px;
+          padding: 0px 4px;
+        }
+      }
+
+      .form--name,
+      .form--surname,
+      .form--password,
+      .form--email {
+        input {
+          &:valid {
+            border: 1px solid green !important;
+            box-shadow: 0 0 0 2px rgba(0, 128, 0, 0.25), inset 0 0 0 50px $white !important;
+
+            & + label {
+              color: green !important;
+            }
+          }
+
+          &:invalid:not(:focus):not(:placeholder-shown) {
+            border: 1px solid red !important;
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.25), inset 0 0 0 50px $white !important;
+
+            & + label {
+              color: red !important;
+            }
+          }
+
+          &:invalid:focus:not(:placeholder-shown) {
+            & ~ .requirements {
+              height: 20px;
+              padding: 4px 16px;
+            }
+          }
+        }
+      }
+    }
+
+    &__buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     }
   }
 }
