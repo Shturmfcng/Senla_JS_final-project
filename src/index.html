@@ -14,9 +14,12 @@
       title="Return To The Homepage">
       <img src="images/content/home.png" alt="little blue house">
     </a>
-    <a class="btn btn--primary" href="#" role="button" aria-label="Sign In / Sign Up">
-      Sign In / Sign Up
-    </a>
+    <div>
+      <span id="authorizedUser"></span>
+      <a id="btnSignInUp" class="btn btn--primary" href="#" role="button" aria-label="Sign In / Sign Up">
+        Sign In / Sign Up
+      </a>
+    </div>
   </header>
 
   <main id="content">
@@ -25,13 +28,13 @@
         <h1 hidden>Film gallery</h1>
         <div class="gallery__sort">
           <select tabindex="0" aria-label="Sort Films" title="Sort Films">
-            <option value="none">none sort</option>
+            <option value="none_sort">none sort</option>
             <option value="vote_rating_down">&darr; rating</option>
             <option value="vote_rating_up">&uarr; rating</option>
             <option value="release_date_down">&darr; date</option>
             <option value="release_date_up">&uarr; date</option>
           </select>
-          <a class="btn-add_film" href="#" role="button" aria-label="Add A New Film" title="Add A New Film">
+          <a class="btn-add_film" href="#" role="button" aria-label="Add A New Film" title="Add A New Film" hidden>
             <img src="images/content/plus.svg" alt="blue plus">
           </a>
         </div>

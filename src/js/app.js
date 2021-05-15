@@ -1,16 +1,20 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-alert */
 /* eslint-disable operator-linebreak */
-import '../scss/app.scss';
-
 /* eslint-disable no-console */
+import '../scss/app.scss';
+import users from '../dummy_data/users.json';
 
 const fetch = require('node-fetch');
 
 document.addEventListener('DOMContentLoaded', function () {
   const header = document.querySelector('.header');
-  const pagination = document.querySelector('.gallery__pagination');
   const sort = document.querySelector('.gallery__sort > select');
+  const pagination = document.querySelector('.gallery__pagination');
   const content = document.getElementById('content');
   const gallery = document.querySelector('.gallery');
+
+  const store = { users, authorizedUser: {} };
 
   let numberPage = '1';
   let sortBy = 'popularity.desc';
@@ -27,12 +31,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function applicationControl(e) {
     const btnHomepage = e.target.closest('.btn-return_homepage');
-    const btnSignInUp = e.target.closest('.btn--primary');
+    const btnSignInUp = e.target.closest('#btnSignInUp');
     const film = document.querySelector('.film');
     const signInUp = document.querySelector('.sign_in_up');
     const registration = document.querySelector('.registration');
+    const authorizedUser = document.getElementById('authorizedUser');
 
     if (btnHomepage) {
+      if (document.querySelectorAll('section').length === 1) {
+        sort.selectedIndex = 0;
+        sortBy = 'popularity.desc';
+        goToHomepage();
+      }
       gallery.removeAttribute('hidden');
       getFilms();
       if (film) {
@@ -43,7 +53,13 @@ document.addEventListener('DOMContentLoaded', function () {
         registration.remove();
       }
     } else if (btnSignInUp) {
-      if (!signInUp) {
+      if (!authorizedUser.textContent === false) {
+        authorizedUser.textContent = '';
+        store.authorizedUser = {};
+        document.getElementById('btnSignInUp').textContent = 'Sign In / Sign Up';
+        addAdministrationFunctions();
+        console.log(store);
+      } else if (!signInUp) {
         gallery.setAttribute('hidden', '');
         if (film) {
           film.remove();
@@ -53,6 +69,13 @@ document.addEventListener('DOMContentLoaded', function () {
         goToSignInUp();
       }
     }
+  }
+
+  function goToHomepage() {
+    const pages = document.querySelectorAll('.number-page');
+    numberPage = '1';
+    document.querySelector('#activePage').removeAttribute('id');
+    pages[0].parentElement.setAttribute('id', 'activePage');
   }
 
   function goToSignInUp() {
@@ -84,18 +107,72 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const signInUp = document.querySelector('.sign_in_up');
     signInUp.addEventListener('input', checkValidity);
-    signInUp.addEventListener('click', goToSignIn);
+    signInUp.addEventListener('submit', SignIn);
     signInUp.addEventListener('click', goToRegistration);
   }
 
-  function goToSignIn(e) {
-    const btnSignIn = e.target.closest('#btnSignIn');
+  function SignIn(e) {
     const signInUp = document.querySelector('.sign_in_up');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const authorizedUser = document.getElementById('authorizedUser');
+    const btnSignInUp = document.getElementById('btnSignInUp');
 
-    if (btnSignIn && !btnSignIn.hasAttribute('disabled')) {
-      signInUp.remove();
-      gallery.removeAttribute('hidden');
-      getFilms();
+    if (e) {
+      for (const user of store.users) {
+        if (user.email.toLowerCase() === email.value.toLowerCase()) {
+          if (user.password === password.value) {
+            e.preventDefault();
+            alert('Вы успешно авторизовались!');
+            signInUp.remove();
+            gallery.removeAttribute('hidden');
+            store.authorizedUser = user;
+            authorizedUser.textContent = user.name;
+            btnSignInUp.textContent = 'Log Out';
+            addAdministrationFunctions();
+            console.log(store);
+          } else {
+            e.preventDefault();
+          }
+        } else {
+          e.preventDefault();
+        }
+      }
+      if (!authorizedUser.textContent) {
+        alert('Email или Password введены не верно!');
+      }
+    }
+  }
+
+  function addAdministrationFunctions() {
+    const btnAddFilm = document.querySelector('.btn-add_film');
+    const bins = document.querySelectorAll('.bin');
+    const pencil = document.querySelector('.pencil');
+
+    if (store.authorizedUser.isAdmin === true) {
+      if (btnAddFilm) {
+        btnAddFilm.removeAttribute('hidden');
+      }
+      if (bins) {
+        for (const bin of bins) {
+          bin.removeAttribute('hidden');
+        }
+      }
+      if (pencil) {
+        pencil.removeAttribute('hidden');
+      }
+    } else {
+      if (btnAddFilm) {
+        btnAddFilm.setAttribute('hidden', '');
+      }
+      if (bins) {
+        for (const bin of bins) {
+          bin.setAttribute('hidden', '');
+        }
+      }
+      if (pencil) {
+        pencil.setAttribute('hidden', '');
+      }
     }
   }
 
@@ -151,9 +228,53 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const registration = document.querySelector('.registration');
       registration.addEventListener('input', checkValidity);
-      const registrationForm = document.querySelector('.registration');
-      registrationForm.addEventListener('input', checkPasswordsMatch);
-      registrationForm.addEventListener('click', clearForm);
+      registration.addEventListener('input', checkPasswordsMatch);
+      registration.addEventListener('submit', signUp);
+      registration.addEventListener('click', clearForm);
+    }
+  }
+
+  function signUp(e) {
+    const name = document.getElementById('userName');
+    const surname = document.getElementById('userSurname');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const registration = document.querySelector('.registration');
+    const authorizedUser = document.getElementById('authorizedUser');
+    const btnSignInUp = document.getElementById('btnSignInUp');
+
+    if (e && !store.users.find((user) => user.email.toLowerCase() === email.value.toLowerCase())) {
+      e.preventDefault();
+      alert('Вы успешно зарегистрировались!');
+      registration.remove();
+      gallery.removeAttribute('hidden');
+      const user = {
+        name: name.value,
+        surname: surname.value,
+        password: password.value,
+        email: email.value,
+        isAdmin: false,
+      };
+      authorizedUser.textContent = user.name;
+      btnSignInUp.textContent = 'Log Out';
+      store.authorizedUser = user;
+      store.users.push(user);
+      console.log(store);
+    } else {
+      e.preventDefault();
+      alert('Пользователь с таким Email уже зарегистрирован!');
+    }
+  }
+
+  function clearForm(e) {
+    const btnSignUp = document.getElementById('btnSignUp');
+    const btnClear = e.target.closest('#btnClear');
+    const confirmPassword = document.getElementById('confirmPassword');
+
+    if (btnClear) {
+      btnSignUp.setAttribute('disabled', '');
+      confirmPassword.classList.remove('valid');
+      confirmPassword.classList.remove('invalid');
     }
   }
 
@@ -198,17 +319,6 @@ document.addEventListener('DOMContentLoaded', function () {
       confirmPassword.classList.remove('valid');
       confirmPassword.classList.add('invalid');
     } else {
-      confirmPassword.classList.remove('valid');
-      confirmPassword.classList.remove('invalid');
-    }
-  }
-
-  function clearForm(e) {
-    const btnSignUp = document.getElementById('btnSignUp');
-    const confirmPassword = document.getElementById('confirmPassword');
-
-    if (e.target.closest('#btnClear')) {
-      btnSignUp.setAttribute('disabled', '');
       confirmPassword.classList.remove('valid');
       confirmPassword.classList.remove('invalid');
     }
@@ -272,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function getFilms() {
-    url = `https://api.themoviedb.org/3/discover/movie?api_key=ec929a3499d8d5db225c5dbcaa0e1607&language=${language}&sort_by=${sortBy}&page=${numberPage}`;
+    url = `https://api.themoviedb.org/3/discover/movie?api_key=ec929a3499d8d5db225c5dbcaa0e1607&language=${language}&sort_by=${sortBy}&page=${numberPage}&vote_count.gte=10`;
     const fetchFilms = fetch(url);
 
     fetchFilms
@@ -300,13 +410,14 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>
         </a>
         <div class="item--admin">
-          <button class="bin" type="button" tabindex="-1"></button>
+          <button class="bin" type="button" tabindex="-1" hidden></button>
         </div>
       </li>
       `;
         });
 
         galleryContainer.innerHTML = galleryContent;
+        addAdministrationFunctions();
       });
     visiblePagination();
   }
@@ -347,8 +458,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 <img class="film__image" src='${backdrop}' alt='${f.title}'>
                 <div>
                   <div class="film__admin">
-                    <button class="pencil" type="button" tabindex="-1"></button>
-                    <button class="bin" type="button" tabindex="-1"></button>
+                    <button class="pencil" type="button" tabindex="-1" hidden></button>
+                    <button class="bin" type="button" tabindex="-1" hidden></button>
                   </div>
                   <div class="film__statistics">
                     <p title="Release Date">${releaseDate}</p>
@@ -365,28 +476,25 @@ document.addEventListener('DOMContentLoaded', function () {
             </section>
             `;
           content.insertAdjacentHTML('beforeend', filmContent);
+          addAdministrationFunctions();
         });
     }
   }
 
   function sortFilms(e) {
-    const pages = document.querySelectorAll('.number-page');
-
-    if (e.target.value === 'none') {
+    if (e.target.value === 'none_sort') {
       sortBy = 'popularity.desc';
     } else if (e.target.value === 'vote_rating_down') {
       sortBy = 'vote_average.desc';
     } else if (e.target.value === 'vote_rating_up') {
       sortBy = 'vote_average.asc';
     } else if (e.target.value === 'release_date_down') {
-      sortBy = 'release_date.desc';
+      sortBy = 'primary_release_date.desc';
     } else if (e.target.value === 'release_date_up') {
-      sortBy = 'release_date.asc';
+      sortBy = 'primary_release_date.asc';
     }
 
-    numberPage = '1';
-    document.querySelector('#activePage').removeAttribute('id');
-    pages[0].parentElement.setAttribute('id', 'activePage');
+    goToHomepage();
     getFilms();
   }
 
