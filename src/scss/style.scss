@@ -315,18 +315,20 @@ body {
 }
 
 .sign_in_up,
-.registration {
+.registration,
+.add_film {
   min-height: 300px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 
   &__content {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
     max-width: 400px;
-    margin: 0 5vw;
+    margin: 0 5vw 32px;
 
     &__title {
       margin: 16px 0 24px;
@@ -337,14 +339,13 @@ body {
     }
 
     &__form {
-      .form--name,
-      .form--surname,
-      .form--password,
-      .form--confirm-password,
-      .form--email {
+      position: relative;
+
+      div:not(.message) {
         position: relative;
 
-        input {
+        input:not([type='checkbox']),
+        textarea {
           display: block;
           padding: 10px 16px;
           margin-bottom: 32px;
@@ -388,9 +389,13 @@ body {
           }
         }
 
+        textarea {
+          height: 102px;
+        }
+
         .requirements {
           position: absolute;
-          top: 40px;
+          bottom: -20px;
           height: 0;
           padding: 0 16px;
           transition: 0.3s;
@@ -429,17 +434,31 @@ body {
           font-size: 12px;
           line-height: 24px;
           left: 12px;
-          bottom: 28px;
+          top: -12px;
           padding: 0px 4px;
+        }
+
+        input[type='checkbox'] {
+          width: 16px;
+          height: 16px;
+          margin-bottom: 24px;
+
+          & + label {
+            display: block;
+            color: $text-color;
+            font-size: 16px;
+            line-height: 16px;
+            left: 24px;
+            top: 0;
+            padding: 0;
+          }
         }
       }
 
-      .form--name,
-      .form--surname,
-      .form--password,
-      .form--email {
-        input {
-          &:valid {
+      div:not(.message) {
+        input:not([type='checkbox']),
+        textarea {
+          &:valid:not(#confirmPassword) {
             border: 1px solid green !important;
             box-shadow: 0 0 0 2px rgba(0, 128, 0, 0.25), inset 0 0 0 50px $white !important;
 
@@ -465,12 +484,60 @@ body {
           }
         }
       }
+
+      .message {
+        position: absolute;
+        display: none;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        width: 410px;
+        top: -5px;
+        left: -5px;
+        z-index: 1;
+        background-color: $white;
+        font-size: 20px;
+
+        &--visible {
+          display: flex;
+        }
+
+        span {
+          margin-top: 40px;
+          text-align: center;
+        }
+
+        span:first-child {
+          color: green;
+        }
+
+        span:last-child {
+          color: red;
+        }
+      }
     }
 
     &__buttons {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+    }
+  }
+}
+
+.sign_in_up {
+  &__content {
+    .message {
+      height: 194px;
+    }
+  }
+}
+
+.registration,
+.add_film {
+  &__content {
+    .message {
+      height: 410px;
     }
   }
 }

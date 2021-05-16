@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const film = document.querySelector('.film');
     const signInUp = document.querySelector('.sign_in_up');
     const registration = document.querySelector('.registration');
+    const addFilm = document.querySelector('.add_film');
     const authorizedUser = document.getElementById('authorizedUser');
 
     if (btnHomepage) {
@@ -43,17 +44,28 @@ document.addEventListener('DOMContentLoaded', function () {
         sortBy = 'popularity.desc';
         goToHomepage();
       }
-      gallery.removeAttribute('hidden');
       getFilms();
+      gallery.removeAttribute('hidden');
+
       if (film) {
         film.remove();
       } else if (signInUp) {
         signInUp.remove();
       } else if (registration) {
         registration.remove();
+      } else if (addFilm) {
+        addFilm.remove();
       }
     } else if (btnSignInUp) {
       if (!authorizedUser.textContent === false) {
+        if (store.authorizedUser.isAdmin && addFilm) {
+          addFilm.remove();
+          sort.selectedIndex = 0;
+          sortBy = 'popularity.desc';
+          goToHomepage();
+          getFilms();
+          gallery.removeAttribute('hidden');
+        }
         authorizedUser.textContent = '';
         store.authorizedUser = {};
         document.getElementById('btnSignInUp').textContent = 'Sign In / Sign Up';
@@ -65,6 +77,8 @@ document.addEventListener('DOMContentLoaded', function () {
           film.remove();
         } else if (registration) {
           registration.remove();
+        } else if (addFilm) {
+          addFilm.remove();
         }
         goToSignInUp();
       }
@@ -84,16 +98,20 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="sign_in_up__content">
           <h1 class="sign_in_up__content__title">Sign In</h1>
           <form id="signInForm" class="sign_in_up__content__form">
-            <div class="form--email">
+            <div>
               <input type="email" id="email" name="email" placeholder="Email" required />
               <label for="email">Email</label>
               <p class="requirements">The email address must contain the "@" symbol.</p>
             </div>
-            <div class="form--password">
+            <div>
               <input type="password" id="password" name="password" minlength="6"
               placeholder="Password" required />
               <label for="password">Password</label>
               <p class="requirements">The password must be at least 6 characters long.</p>
+            </div>
+            <div class="message">
+              <span hidden>Authorization was successful!</span>
+              <span hidden>Email or Password entered incorrectly!</span>
             </div>
           </form>
           <div class="sign_in_up__content__buttons">
@@ -107,12 +125,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const signInUp = document.querySelector('.sign_in_up');
     signInUp.addEventListener('input', checkValidity);
-    signInUp.addEventListener('submit', SignIn);
+    signInUp.addEventListener('submit', signIn);
     signInUp.addEventListener('click', goToRegistration);
   }
 
-  function SignIn(e) {
+  function signIn(e) {
     const signInUp = document.querySelector('.sign_in_up');
+    const message = document.querySelector('.message');
+    const messageSuccess = document.querySelector('.message > span:first-child');
+    const messageError = document.querySelector('.message > span:last-child');
     const email = document.getElementById('email');
     const password = document.getElementById('password');
     const authorizedUser = document.getElementById('authorizedUser');
@@ -123,14 +144,17 @@ document.addEventListener('DOMContentLoaded', function () {
         if (user.email.toLowerCase() === email.value.toLowerCase()) {
           if (user.password === password.value) {
             e.preventDefault();
-            alert('Вы успешно авторизовались!');
-            signInUp.remove();
-            gallery.removeAttribute('hidden');
             store.authorizedUser = user;
             authorizedUser.textContent = user.name;
             btnSignInUp.textContent = 'Log Out';
-            addAdministrationFunctions();
-            console.log(store);
+            message.classList.add('message--visible');
+            messageSuccess.removeAttribute('hidden');
+            setTimeout(() => {
+              signInUp.remove();
+              gallery.removeAttribute('hidden');
+              addAdministrationFunctions();
+              console.log(store);
+            }, 2000);
           } else {
             e.preventDefault();
           }
@@ -139,7 +163,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
       if (!authorizedUser.textContent) {
-        alert('Email или Password введены не верно!');
+        message.classList.add('message--visible');
+        messageError.removeAttribute('hidden');
+        setTimeout(() => {
+          message.classList.remove('message--visible');
+          email.value = '';
+          password.value = '';
+          messageError.setAttribute('hidden', '');
+          btnSignIn.setAttribute('disabled', '');
+        }, 2000);
       }
     }
   }
@@ -149,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const bins = document.querySelectorAll('.bin');
     const pencil = document.querySelector('.pencil');
 
-    if (store.authorizedUser.isAdmin === true) {
+    if (store.authorizedUser.isAdmin) {
       if (btnAddFilm) {
         btnAddFilm.removeAttribute('hidden');
       }
@@ -187,32 +219,36 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="registration__content">
           <h1 class="registration__content__title">Registration</h1>
           <form id="registrationForm" class="registration__content__form">
-            <div class="form--name">
+            <div>
               <input type="text" id="userName" name="userName" minlength="6" placeholder="Name" required />
               <label for="userName">Name</label>
               <p class="requirements">The name must be at least 6 characters long.</p>
             </div>
-            <div class="form--surname">
+            <div>
               <input type="text" id="userSurname" name="userSurname" minlength="6" placeholder="Surname" required />
               <label for="userSurname">Surname</label>
               <p class="requirements">The surname must be at least 6 characters long.</p>
             </div>
-            <div class="form--password">
+            <div>
               <input type="password" id="password" name="password" minlength="6"
               placeholder="Password" required />
               <label for="password">Password</label>
               <p class="requirements">The password must be at least 6 characters long.</p>
             </div>
-            <div class="form--confirm-password">
+            <div>
               <input type="password" id="confirmPassword" name="confirm-password" minlength="6"
               placeholder="Confirm Password" required />
               <label for="confirmPassword">Confirm Password</label>
               <p class="requirements">You entered two different passwords. Please try again.</p>
             </div>
-            <div class="form--email">
+            <div>
               <input type="email" id="email" name="email" placeholder="Email" required />
               <label for="email">Email</label>
               <p class="requirements">The email address must contain the "@" symbol.</p>
+            </div>
+            <div class="message">
+              <span hidden>Registration completed successfully!</span>
+              <span hidden>A user with this Email already registered!</span>
             </div>
           </form>
           <div class="registration__content__buttons">
@@ -235,19 +271,21 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function signUp(e) {
+    const message = document.querySelector('.message');
+    const messageSuccess = document.querySelector('.message > span:first-child');
+    const messageError = document.querySelector('.message > span:last-child');
     const name = document.getElementById('userName');
     const surname = document.getElementById('userSurname');
     const email = document.getElementById('email');
     const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
     const registration = document.querySelector('.registration');
+    const registrationForm = document.getElementById('registrationForm');
     const authorizedUser = document.getElementById('authorizedUser');
     const btnSignInUp = document.getElementById('btnSignInUp');
 
     if (e && !store.users.find((user) => user.email.toLowerCase() === email.value.toLowerCase())) {
       e.preventDefault();
-      alert('Вы успешно зарегистрировались!');
-      registration.remove();
-      gallery.removeAttribute('hidden');
       const user = {
         name: name.value,
         surname: surname.value,
@@ -256,36 +294,65 @@ document.addEventListener('DOMContentLoaded', function () {
         isAdmin: false,
       };
       authorizedUser.textContent = user.name;
-      btnSignInUp.textContent = 'Log Out';
       store.authorizedUser = user;
       store.users.push(user);
-      console.log(store);
+      btnSignInUp.textContent = 'Log Out';
+      message.classList.add('message--visible');
+      messageSuccess.removeAttribute('hidden');
+      setTimeout(() => {
+        registration.remove();
+        gallery.removeAttribute('hidden');
+        console.log(store);
+      }, 2000);
     } else {
       e.preventDefault();
-      alert('Пользователь с таким Email уже зарегистрирован!');
+      message.classList.add('message--visible');
+      messageError.removeAttribute('hidden');
+      setTimeout(() => {
+        message.classList.remove('message--visible');
+        registrationForm.reset();
+        messageError.setAttribute('hidden', '');
+        btnSignUp.setAttribute('disabled', '');
+        confirmPassword.classList.remove('valid');
+        confirmPassword.classList.remove('invalid');
+      }, 2000);
     }
   }
 
   function clearForm(e) {
-    const btnSignUp = document.getElementById('btnSignUp');
     const btnClear = e.target.closest('#btnClear');
+    const btnSignUp = document.getElementById('btnSignUp');
     const confirmPassword = document.getElementById('confirmPassword');
+    const btnAdd = document.getElementById('btnAdd');
 
     if (btnClear) {
-      btnSignUp.setAttribute('disabled', '');
-      confirmPassword.classList.remove('valid');
-      confirmPassword.classList.remove('invalid');
+      if (btnSignUp) {
+        btnSignUp.setAttribute('disabled', '');
+        confirmPassword.classList.remove('valid');
+        confirmPassword.classList.remove('invalid');
+      } else if (btnAdd) {
+        btnAdd.setAttribute('disabled', '');
+      }
     }
   }
 
   function checkValidity() {
     const btnSignIn = document.getElementById('btnSignIn');
     const btnSignUp = document.getElementById('btnSignUp');
+    const btnAdd = document.getElementById('btnAdd');
     const name = document.getElementById('userName');
     const surname = document.getElementById('userSurname');
     const email = document.getElementById('email');
     const password = document.getElementById('password');
     const confirmPassword = document.getElementById('confirmPassword');
+    const filmTitle = document.getElementById('filmTitle');
+    const filmOverview = document.getElementById('filmOverview');
+    const filmPosterPath = document.getElementById('filmPosterPath');
+    const filmPopularity = document.getElementById('filmPosterPath');
+    const filmReleaseDate = document.getElementById('filmReleaseDate');
+    const filmGenres = document.getElementById('filmGenres');
+    const filmVoteAverage = document.getElementById('filmVoteAverage');
+    const filmVoteCount = document.getElementById('filmVoteCount');
 
     if (btnSignIn) {
       if (email.checkValidity() && password.checkValidity()) {
@@ -305,6 +372,21 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         btnSignUp.setAttribute('disabled', '');
       }
+    } else if (btnAdd) {
+      if (
+        filmTitle.checkValidity() &&
+        filmOverview.checkValidity() &&
+        filmPosterPath.checkValidity() &&
+        filmPopularity.checkValidity() &&
+        filmReleaseDate.checkValidity() &&
+        filmGenres.checkValidity() &&
+        filmVoteAverage.checkValidity() &&
+        filmVoteCount.checkValidity()
+      ) {
+        btnAdd.removeAttribute('disabled');
+      } else {
+        btnAdd.setAttribute('disabled', '');
+      }
     }
   }
 
@@ -321,6 +403,107 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
       confirmPassword.classList.remove('valid');
       confirmPassword.classList.remove('invalid');
+    }
+  }
+
+  function goToAddFilm(e) {
+    const btnAddFilm = e.target.closest('.btn-add_film');
+
+    if (btnAddFilm) {
+      gallery.setAttribute('hidden', '');
+
+      const pageContent = `
+      <section class="add_film">
+        <div class="add_film__content">
+          <h1 class="add_film__content__title">Add Film</h1>
+          <form id="addFilmForm" class="add_film__content__form">
+            <div>
+              <input type="text" id="filmTitle" name="filmTitle" minlength="3" placeholder="title" autocomplete="off" required />
+              <label for="filmTitle">title</label>
+              <p class="requirements">At least 3 characters.</p>
+            </div>
+            <div>
+              <textarea type="text" id="filmOverview" name="filmOverview" minlength="6"
+              maxlength="150" placeholder="overview" required></textarea>
+              <label for="filmOverview">overview</label>
+              <p class="requirements">At least 6 characters and no more than 150.</p>
+            </div>
+            <div>
+              <input type="text" id="filmPosterPath" name="filmPosterPath" placeholder="poster_path" required />
+              <label for="filmPosterPath">poster_path</label>
+            </div>
+            <div>
+              <input type="number" id="filmPopularity" name="filmPopularity" placeholder="popularity" autocomplete="off" required />
+              <label for="filmPopularity">popularity</label>
+              <p class="requirements">Only numbers.</p>
+            </div>
+            <div>
+              <input type="date" id="filmReleaseDate" name="filmReleaseDate" required />
+              <label for="filmReleaseDate">release_date</label>
+            </div>
+            <div>
+              <input type="selector" id="filmGenres" name="filmGenres" placeholder="genres" required />
+              <label for="filmGenres">genres</label>
+            </div>
+            <div>
+              <input type="number" id="filmVoteAverage" name="filmVoteAverage" placeholder="vote_average" required />
+              <label for="filmVoteAverage">vote_average</label>
+              <p class="requirements">Only numbers.</p>
+            </div>
+            <div>
+              <input type="number" id="filmVoteCount" name="filmVoteCount" placeholder="vote_count" required />
+              <label for="filmVoteCount">vote_count</label>
+              <p class="requirements">Only numbers.</p>
+            </div>
+            <div>
+              <input type="checkbox" id="filmAgeRestrictions" name="filmAgeRestrictions" />
+              <label for="filmAgeRestrictions">adult</label>
+            </div>
+            <div class="message">
+              <span hidden>Film added successfully!</span>
+              <span hidden></span>
+            </div>
+          </form>
+          <div class="add_film__content__buttons">
+            <button form="addFilmForm" id="btnAdd" class="btn btn--primary" aria-label="Add" disabled>Add</button>
+            <button form="addFilmForm" id="btnClear" class="btn btn--secondary" type="reset" aria-label="Clear">
+            Clear</button>
+          </div>
+        </div>
+      </section>
+    `;
+      content.insertAdjacentHTML('beforeend', pageContent);
+
+      const addFilm = document.querySelector('.add_film');
+      addFilm.addEventListener('input', checkValidity);
+      addFilm.addEventListener('submit', addFilmToGallary);
+      addFilm.addEventListener('click', clearForm);
+    }
+  }
+
+  function addFilmToGallary(e) {
+    const message = document.querySelector('.message');
+    const messageSuccess = document.querySelector('.message > span:first-child');
+    const addFilmForm = document.getElementById('addFilmForm');
+    const addFilmFormDiv = document.querySelectorAll('#addFilmForm > div:not(.message)');
+    const btnAdd = document.getElementById('btnAdd');
+
+    if (e) {
+      e.preventDefault();
+      message.classList.add('message--visible');
+      messageSuccess.removeAttribute('hidden');
+      for (const item of addFilmFormDiv) {
+        item.setAttribute('hidden', '');
+      }
+      btnAdd.setAttribute('disabled', '');
+      setTimeout(() => {
+        for (const item of addFilmFormDiv) {
+          item.removeAttribute('hidden', '');
+        }
+        addFilmForm.reset();
+        messageSuccess.setAttribute('hidden', '');
+        message.classList.remove('message--visible');
+      }, 2000);
     }
   }
 
@@ -500,6 +683,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   header.addEventListener('click', applicationControl);
   content.addEventListener('click', getFilm);
+  content.addEventListener('click', goToAddFilm);
   sort.addEventListener('change', sortFilms);
   pagination.addEventListener('click', switchPage);
 });
