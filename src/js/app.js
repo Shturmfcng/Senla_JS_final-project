@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-/* eslint-disable no-alert */
 /* eslint-disable operator-linebreak */
 /* eslint-disable no-console */
 import '../scss/app.scss';
@@ -13,35 +12,57 @@ document.addEventListener('DOMContentLoaded', function () {
   const pagination = document.querySelector('.gallery__pagination');
   const content = document.getElementById('content');
   const gallery = document.querySelector('.gallery');
+  const authorizedUser = document.getElementById('authorizedUser');
+  const btnSignInUp = document.getElementById('btnSignInUp');
+  let store = {
+    users,
+    authorizedUser: {},
+    numberPage: '1',
+    sortBy: 'popularity.desc',
+    language: 'en-US',
+  };
 
-  const store = { users, authorizedUser: {} };
-
-  let numberPage = '1';
-  let sortBy = 'popularity.desc';
-  const language = 'en-US';
-  let url;
-
+  loadData();
+  checkAuthorizedUser();
   goToPage();
+  console.log(store);
+
+  function checkAuthorizedUser() {
+    if (!store.authorizedUser.name === false) {
+      authorizedUser.textContent = store.authorizedUser.name;
+      btnSignInUp.textContent = 'Log Out';
+    } else {
+      btnSignInUp.textContent = 'Sign In / Sign Up';
+    }
+  }
+
+  function savedData() {
+    localStorage.setItem('savedData', JSON.stringify(store));
+  }
+
+  function loadData() {
+    const data = localStorage.getItem('savedData');
+    if (data) {
+      store = JSON.parse(data);
+    }
+  }
 
   function goToPage() {
     const activePage = document.getElementById('activePage');
-    numberPage = activePage.textContent;
+    store.numberPage = activePage.textContent;
     getFilms();
   }
 
   function applicationControl(e) {
-    const btnHomepage = e.target.closest('.btn-return_homepage');
-    const btnSignInUp = e.target.closest('#btnSignInUp');
     const film = document.querySelector('.film');
     const signInUp = document.querySelector('.sign_in_up');
     const registration = document.querySelector('.registration');
     const addFilm = document.querySelector('.add_film');
-    const authorizedUser = document.getElementById('authorizedUser');
 
-    if (btnHomepage) {
+    if (e.target.closest('.btn-return_homepage')) {
       if (document.querySelectorAll('section').length === 1) {
         sort.selectedIndex = 0;
-        sortBy = 'popularity.desc';
+        store.sortBy = 'popularity.desc';
         goToHomepage();
       }
       getFilms();
@@ -56,21 +77,21 @@ document.addEventListener('DOMContentLoaded', function () {
       } else if (addFilm) {
         addFilm.remove();
       }
-    } else if (btnSignInUp) {
+    } else if (e.target.closest('#btnSignInUp')) {
       if (!authorizedUser.textContent === false) {
         if (store.authorizedUser.isAdmin && addFilm) {
           addFilm.remove();
           sort.selectedIndex = 0;
-          sortBy = 'popularity.desc';
+          store.sortBy = 'popularity.desc';
           goToHomepage();
           getFilms();
           gallery.removeAttribute('hidden');
         }
         authorizedUser.textContent = '';
+        btnSignInUp.textContent = 'Sign In / Sign Up';
         store.authorizedUser = {};
-        document.getElementById('btnSignInUp').textContent = 'Sign In / Sign Up';
+        savedData();
         addAdministrationFunctions();
-        console.log(store);
       } else if (!signInUp) {
         gallery.setAttribute('hidden', '');
         if (film) {
@@ -87,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function goToHomepage() {
     const pages = document.querySelectorAll('.number-page');
-    numberPage = '1';
+    store.numberPage = '1';
     document.querySelector('#activePage').removeAttribute('id');
     pages[0].parentElement.setAttribute('id', 'activePage');
   }
@@ -136,8 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const messageError = document.querySelector('.message > span:last-child');
     const email = document.getElementById('email');
     const password = document.getElementById('password');
-    const authorizedUser = document.getElementById('authorizedUser');
-    const btnSignInUp = document.getElementById('btnSignInUp');
+    const btnSignIn = document.getElementById('btnSignIn');
 
     if (e) {
       for (const user of store.users) {
@@ -145,15 +165,14 @@ document.addEventListener('DOMContentLoaded', function () {
           if (user.password === password.value) {
             e.preventDefault();
             store.authorizedUser = user;
-            authorizedUser.textContent = user.name;
-            btnSignInUp.textContent = 'Log Out';
+            checkAuthorizedUser();
             message.classList.add('message--visible');
             messageSuccess.removeAttribute('hidden');
+            savedData();
             setTimeout(() => {
               signInUp.remove();
               gallery.removeAttribute('hidden');
               addAdministrationFunctions();
-              console.log(store);
             }, 2000);
           } else {
             e.preventDefault();
@@ -281,8 +300,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirmPassword = document.getElementById('confirmPassword');
     const registration = document.querySelector('.registration');
     const registrationForm = document.getElementById('registrationForm');
-    const authorizedUser = document.getElementById('authorizedUser');
-    const btnSignInUp = document.getElementById('btnSignInUp');
+    const btnSignUp = document.getElementById('btnSignUp');
 
     if (e && !store.users.find((user) => user.email.toLowerCase() === email.value.toLowerCase())) {
       e.preventDefault();
@@ -294,15 +312,15 @@ document.addEventListener('DOMContentLoaded', function () {
         isAdmin: false,
       };
       authorizedUser.textContent = user.name;
+      btnSignInUp.textContent = 'Log Out';
       store.authorizedUser = user;
       store.users.push(user);
-      btnSignInUp.textContent = 'Log Out';
       message.classList.add('message--visible');
       messageSuccess.removeAttribute('hidden');
+      savedData();
       setTimeout(() => {
         registration.remove();
         gallery.removeAttribute('hidden');
-        console.log(store);
       }, 2000);
     } else {
       e.preventDefault();
@@ -433,27 +451,28 @@ document.addEventListener('DOMContentLoaded', function () {
               <label for="filmPosterPath">poster_path</label>
             </div>
             <div>
-              <input type="number" id="filmPopularity" name="filmPopularity" placeholder="popularity" autocomplete="off" required />
+              <input type="number" id="filmPopularity" name="filmPopularity" placeholder="popularity" autocomplete="off" min="0" step="0.001" required />
               <label for="filmPopularity">popularity</label>
-              <p class="requirements">Only numbers.</p>
+              <p class="requirements">Any positive number (no more than 3 characters after the places).</p>
             </div>
             <div>
               <input type="date" id="filmReleaseDate" name="filmReleaseDate" required />
               <label for="filmReleaseDate">release_date</label>
             </div>
             <div>
-              <input type="selector" id="filmGenres" name="filmGenres" placeholder="genres" required />
+              <select id="filmGenres" name="filmGenres" size="4" multiple required>
+              </select>
               <label for="filmGenres">genres</label>
             </div>
             <div>
-              <input type="number" id="filmVoteAverage" name="filmVoteAverage" placeholder="vote_average" required />
+              <input type="number" id="filmVoteAverage" name="filmVoteAverage" placeholder="vote_average" min="0" max="10" step="0.01" required />
               <label for="filmVoteAverage">vote_average</label>
-              <p class="requirements">Only numbers.</p>
+              <p class="requirements">Any positive number from 0 to 10 (no more than 2 decimal places).</p>
             </div>
             <div>
-              <input type="number" id="filmVoteCount" name="filmVoteCount" placeholder="vote_count" required />
+              <input type="number" id="filmVoteCount" name="filmVoteCount" placeholder="vote_count" min="0" required />
               <label for="filmVoteCount">vote_count</label>
-              <p class="requirements">Only numbers.</p>
+              <p class="requirements">Any positive non-fractional number.</p>
             </div>
             <div>
               <input type="checkbox" id="filmAgeRestrictions" name="filmAgeRestrictions" />
@@ -473,6 +492,7 @@ document.addEventListener('DOMContentLoaded', function () {
       </section>
     `;
       content.insertAdjacentHTML('beforeend', pageContent);
+      getGenres();
 
       const addFilm = document.querySelector('.add_film');
       addFilm.addEventListener('input', checkValidity);
@@ -565,8 +585,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function getFilms() {
-    url = `https://api.themoviedb.org/3/discover/movie?api_key=ec929a3499d8d5db225c5dbcaa0e1607&language=${language}&sort_by=${sortBy}&page=${numberPage}&vote_count.gte=10`;
-    const fetchFilms = fetch(url);
+    const urlFilms = `https://api.themoviedb.org/3/discover/movie?api_key=ec929a3499d8d5db225c5dbcaa0e1607&language=${store.language}&sort_by=${store.sortBy}&page=${store.numberPage}&vote_count.gte=10`;
+    const fetchFilms = fetch(urlFilms);
 
     fetchFilms
       .then((response) => response.json())
@@ -605,6 +625,29 @@ document.addEventListener('DOMContentLoaded', function () {
     visiblePagination();
   }
 
+  function getGenres() {
+    const urlGenres = `https://api.themoviedb.org/3/genre/movie/list?api_key=ec929a3499d8d5db225c5dbcaa0e1607&language=${store.language}`;
+
+    const fetchGenres = fetch(urlGenres);
+
+    fetchGenres
+      .then((response) => response.json())
+      .then((result) => {
+        let genre = '';
+        const genres = document.getElementById('filmGenres');
+
+        result.genres.forEach((g) => {
+          genre += `
+          <option id="${g.id}" name="${g.name}">
+            ${g.name}
+          </option>
+          `;
+        });
+
+        genres.innerHTML = genre;
+      });
+  }
+
   function getFilm(e) {
     const item = e.target.closest('.item');
 
@@ -612,9 +655,9 @@ document.addEventListener('DOMContentLoaded', function () {
       gallery.setAttribute('hidden', '');
       const filmId = item.getAttribute('id');
 
-      url = `https://api.themoviedb.org/3/movie/${filmId}?api_key=ec929a3499d8d5db225c5dbcaa0e1607&language=${language}`;
+      const urlFilm = `https://api.themoviedb.org/3/movie/${filmId}?api_key=ec929a3499d8d5db225c5dbcaa0e1607&language=${store.language}`;
 
-      const fetchFilm = fetch(url);
+      const fetchFilm = fetch(urlFilm);
       let genres = '';
 
       fetchFilm
@@ -666,15 +709,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function sortFilms(e) {
     if (e.target.value === 'none_sort') {
-      sortBy = 'popularity.desc';
+      store.sortBy = 'popularity.desc';
     } else if (e.target.value === 'vote_rating_down') {
-      sortBy = 'vote_average.desc';
+      store.sortBy = 'vote_average.desc';
     } else if (e.target.value === 'vote_rating_up') {
-      sortBy = 'vote_average.asc';
+      store.sortBy = 'vote_average.asc';
     } else if (e.target.value === 'release_date_down') {
-      sortBy = 'primary_release_date.desc';
+      store.sortBy = 'primary_release_date.desc';
     } else if (e.target.value === 'release_date_up') {
-      sortBy = 'primary_release_date.asc';
+      store.sortBy = 'primary_release_date.asc';
     }
 
     goToHomepage();
