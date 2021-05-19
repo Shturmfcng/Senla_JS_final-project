@@ -15,16 +15,15 @@ export default function getFilms() {
       const galleryContainer = document.querySelector('.gallery__container');
 
       films.results.forEach((f) => {
-        if (!store.deletedFilmsId.includes(f.id.toString())) {
-          const releaseDate = f.release_date || 'No Information';
-          let poster;
-          if (f.poster_path) {
-            poster = `https://image.tmdb.org/t/p/w200${f.poster_path}`;
-          } else {
-            poster = '../images/content/no_image_available.svg';
-          }
+        const releaseDate = f.release_date || 'No Information';
+        let poster;
+        if (f.poster_path) {
+          poster = `https://image.tmdb.org/t/p/w200${f.poster_path}`;
+        } else {
+          poster = '../images/content/no_image_available.svg';
+        }
 
-          galleryContent += `
+        galleryContent += `
             <li class="gallery__item">
               <a class="item" href="#" id="${f.id}"><img src="${poster}" alt="${f.title}">
                 <div class='tooltip'>
@@ -38,11 +37,15 @@ export default function getFilms() {
               </div>
             </li>
             `;
-        }
       });
 
       galleryContainer.innerHTML = galleryContent;
       addAdministrationFunctions();
+      for (const film of store.deletedFilmsId) {
+        if (document.getElementById(film)) {
+          document.getElementById(film).parentElement.remove();
+        }
+      }
     });
   visiblePagination();
 }

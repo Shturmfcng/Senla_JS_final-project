@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable import/no-cycle */
 
 import { gallery, store } from './app';
 import savedData from './savedData';
