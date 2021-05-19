@@ -12,7 +12,6 @@ import deleteFilm from './deleteFilm';
 import getFilm from './getFilm';
 import goToAddFilm from './goToAddFilm';
 import goToNumberPage from './goToNumberPage';
-import savedData from './savedData';
 import sortFilms from './sortFilms';
 import switchPage from './switchPage';
 
@@ -46,11 +45,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   loadData();
   // Очистить массив удалённых и добавленных фильмов:
-  store.deletedFilmsId = [];
-  store.addedFilms = [];
-  savedData();
-  console.log(store.deletedFilmsId);
-  console.log(store.addedFilms);
+  // store.deletedFilmsId = [];
+  // store.addedFilms = [];
+  // savedData();
 
   checkAuthorizedUser();
   goToNumberPage();
