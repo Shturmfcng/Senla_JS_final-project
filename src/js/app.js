@@ -45,9 +45,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   loadData();
   // Очистить массив удалённых и добавленных фильмов:
-  // store.deletedFilmsId = [];
-  // store.addedFilms = [];
-  // savedData();
+  store.deletedFilmsId = [];
+  store.addedFilms = [];
+  savedData();
+  console.log(store.deletedFilmsId);
+  console.log(store.addedFilms);
 
   checkAuthorizedUser();
   goToNumberPage();
