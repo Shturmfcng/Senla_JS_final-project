@@ -12,6 +12,7 @@ import deleteFilm from './deleteFilm';
 import getFilm from './getFilm';
 import goToAddFilm from './goToAddFilm';
 import goToNumberPage from './goToNumberPage';
+import savedData from './savedData';
 import sortFilms from './sortFilms';
 import switchPage from './switchPage';
 
