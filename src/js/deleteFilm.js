@@ -10,11 +10,9 @@ export default function deleteFilm(e) {
 
   if (binGallary) {
     const filmId = binGallary.parentElement.previousElementSibling.id;
-    if (!store.deletedFilmsId.includes(filmId)) {
-      store.deletedFilmsId.push(filmId);
-      document.getElementById(filmId).parentElement.remove();
-      savedData();
-    }
+    store.deletedFilmsId.push(filmId);
+    document.getElementById(filmId).parentElement.remove();
+    savedData();
   } else if (binFilm) {
     const filmId = binFilm.closest('section:not([id=""])').id;
     store.deletedFilmsId.push(filmId);

@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable import/no-cycle */
 import { store } from './app';
 import goToHomepage from './goToHomepage';
 import getFilms from './getFilms';

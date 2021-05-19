@@ -1,5 +1,6 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable object-curly-newline */
+/* eslint-disable import/no-cycle */
 
 import { authorizedUser, btnSignInUp, gallery, sort, store } from './app';
 import addAdministrationFunctions from './addAdministrationFunctions';

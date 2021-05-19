@@ -1,4 +1,6 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable import/no-cycle */
+
 import goToNumberPage from './goToNumberPage';
 
 export default function switchPage(e) {
