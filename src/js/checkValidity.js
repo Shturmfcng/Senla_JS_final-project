@@ -10,14 +10,14 @@ export default function checkValidity() {
   const email = document.getElementById('email');
   const password = document.getElementById('password');
   const confirmPassword = document.getElementById('confirmPassword');
-  const filmTitle = document.getElementById('filmTitle');
-  const filmOverview = document.getElementById('filmOverview');
-  const filmPosterPath = document.getElementById('filmPosterPath');
-  const filmPopularity = document.getElementById('filmPosterPath');
-  const filmReleaseDate = document.getElementById('filmReleaseDate');
-  const filmGenres = document.getElementById('filmGenres');
-  const filmVoteAverage = document.getElementById('filmVoteAverage');
-  const filmVoteCount = document.getElementById('filmVoteCount');
+  const filmTitle = document.getElementById('title');
+  const filmOverview = document.getElementById('overview');
+  const filmPosterPath = document.getElementById('poster_path');
+  const filmPopularity = document.getElementById('popularity');
+  const filmReleaseDate = document.getElementById('release_date');
+  const filmGenres = document.getElementById('genres');
+  const filmVoteAverage = document.getElementById('vote_average');
+  const filmVoteCount = document.getElementById('vote_count');
 
   if (btnSignIn) {
     if (email.checkValidity() && password.checkValidity()) {

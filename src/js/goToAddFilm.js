@@ -1,4 +1,6 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable import/no-cycle */
+
 import { content, gallery } from './app';
 import addFilmToGallary from './addFilmToGallary';
 import checkValidity from './checkValidity';
@@ -17,47 +19,47 @@ export default function goToAddFilm(e) {
           <h1 class="add_film__content__title">Add Film</h1>
           <form id="addFilmForm" class="add_film__content__form">
             <div>
-              <input type="text" id="filmTitle" name="filmTitle" minlength="3" placeholder="title" autocomplete="off" required />
-              <label for="filmTitle">title</label>
+              <input type="text" id="title" name="title" minlength="3" placeholder="title" autocomplete="off" required />
+              <label for="title">title</label>
               <p class="requirements">At least 3 characters.</p>
             </div>
             <div>
-              <textarea type="text" id="filmOverview" name="filmOverview" minlength="6"
+              <textarea type="text" id="overview" name="overview" minlength="6"
               maxlength="150" placeholder="overview" required></textarea>
-              <label for="filmOverview">overview</label>
+              <label for="overview">overview</label>
               <p class="requirements">At least 6 characters and no more than 150.</p>
             </div>
             <div>
-              <input type="text" id="filmPosterPath" name="filmPosterPath" placeholder="poster_path" required />
-              <label for="filmPosterPath">poster_path</label>
+              <input type="text" id="poster_path" name="poster_path" placeholder="poster_path" required />
+              <label for="poster_path">poster_path</label>
             </div>
             <div>
-              <input type="number" id="filmPopularity" name="filmPopularity" placeholder="popularity" autocomplete="off" min="0" step="0.001" required />
-              <label for="filmPopularity">popularity</label>
+              <input type="number" id="popularity" name="popularity" placeholder="popularity" autocomplete="off" min="0" step="0.001" required />
+              <label for="popularity">popularity</label>
               <p class="requirements">Any positive number (no more than 3 characters after the places).</p>
             </div>
             <div>
-              <input type="date" id="filmReleaseDate" name="filmReleaseDate" required />
-              <label for="filmReleaseDate">release_date</label>
+              <input type="date" id="release_date" name="release_date" required />
+              <label for="release_date">release_date</label>
             </div>
             <div>
-              <select id="filmGenres" name="filmGenres" size="4" multiple required>
+              <select id="genres" name="genres" size="4" multiple required>
               </select>
-              <label for="filmGenres">genres</label>
+              <label for="genres">genres</label>
             </div>
             <div>
-              <input type="number" id="filmVoteAverage" name="filmVoteAverage" placeholder="vote_average" min="0" max="10" step="0.01" required />
-              <label for="filmVoteAverage">vote_average</label>
+              <input type="number" id="vote_average" name="vote_average" placeholder="vote_average" min="0" max="10" step="0.01" required />
+              <label for="vote_average">vote_average</label>
               <p class="requirements">Any positive number from 0 to 10 (no more than 2 decimal places).</p>
             </div>
             <div>
-              <input type="number" id="filmVoteCount" name="filmVoteCount" placeholder="vote_count" min="0" required />
-              <label for="filmVoteCount">vote_count</label>
+              <input type="number" id="vote_count" name="vote_count" placeholder="vote_count" min="0" required />
+              <label for="vote_count">vote_count</label>
               <p class="requirements">Any positive non-fractional number.</p>
             </div>
             <div>
-              <input type="checkbox" id="filmAgeRestrictions" name="filmAgeRestrictions" />
-              <label for="filmAgeRestrictions">adult</label>
+              <input type="checkbox" id="adult" name="adult" />
+              <label for="adult">adult</label>
             </div>
             <div class="message">
               <span hidden>Film added successfully!</span>

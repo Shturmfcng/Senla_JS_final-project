@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable object-curly-newline */
 /* eslint-disable import/no-mutable-exports */
 /* eslint-disable import/no-cycle */
@@ -7,6 +8,7 @@ import '../scss/app.scss';
 import users from '../dummy_data/users.json';
 import applicationControl from './applicationControl';
 import checkAuthorizedUser from './checkAuthorizedUser';
+import deleteFilm from './deleteFilm';
 import getFilm from './getFilm';
 import goToAddFilm from './goToAddFilm';
 import goToNumberPage from './goToNumberPage';
@@ -29,6 +31,8 @@ let store = {
   numberPage: '1',
   sortBy: 'popularity.desc',
   language: 'en-US',
+  deletedFilmsId: [],
+  addedFilms: [],
 };
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -40,10 +44,16 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   loadData();
+  // Очистить массив удалённых и добавленных фильмов:
+  // store.deletedFilmsId = [];
+  // store.addedFilms = [];
+  // savedData();
+
   checkAuthorizedUser();
   goToNumberPage();
 
   header.addEventListener('click', applicationControl);
+  content.addEventListener('click', deleteFilm);
   content.addEventListener('click', getFilm);
   content.addEventListener('click', goToAddFilm);
   sort.addEventListener('change', sortFilms);

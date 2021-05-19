@@ -1,4 +1,6 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable import/no-cycle */
+
 import { fetch, store } from './app';
 
 export default function getGenres() {
@@ -10,7 +12,7 @@ export default function getGenres() {
     .then((response) => response.json())
     .then((result) => {
       let genre = '';
-      const genres = document.getElementById('filmGenres');
+      const genres = document.getElementById('genres');
 
       result.genres.forEach((g) => {
         genre += `

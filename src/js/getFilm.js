@@ -1,5 +1,6 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable object-curly-newline */
+/* eslint-disable import/no-cycle */
 
 import { content, fetch, gallery, store } from './app';
 import addAdministrationFunctions from './addAdministrationFunctions';
@@ -34,7 +35,7 @@ export default function getFilm(e) {
         }
 
         const filmContent = `
-            <section class="film">
+            <section class="film" id="${f.id}">
               <h1 class="film__title">${f.title}</h1>
               <div class="film__image-wrapper">
                 <img class="film__image" src='${backdrop}' alt='${f.title}'>
@@ -58,6 +59,7 @@ export default function getFilm(e) {
             </section>
             `;
         content.insertAdjacentHTML('beforeend', filmContent);
+
         addAdministrationFunctions();
       });
   }
